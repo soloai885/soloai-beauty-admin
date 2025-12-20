@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = 'force-dynamic';
 
 /**
- * Deactivate ServiceItem API
+ * Deactivate Service API
  * PATCH /api/admin/service-items/[id]/deactivate
  */
 export async function PATCH(
@@ -16,7 +16,7 @@ export async function PATCH(
     const { id } = await params;
 
     // 檢查是否存在
-    const existing = await prisma.serviceItem.findUnique({
+    const existing = await prisma.service.findUnique({
       where: { id: id },
     });
 
@@ -24,14 +24,14 @@ export async function PATCH(
       return NextResponse.json(
         {
           error_code: "NOT_FOUND",
-          message: `ServiceItem with id ${id} not found`,
+          message: `Service with id ${id} not found`,
         },
         { status: 404 }
       );
     }
 
     // 停用（isActive = false）
-    const serviceItem = await prisma.serviceItem.update({
+    const service = await prisma.service.update({
       where: {
         id: id,
       },
@@ -40,7 +40,7 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json(serviceItem, { status: 200 });
+    return NextResponse.json(service, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       {

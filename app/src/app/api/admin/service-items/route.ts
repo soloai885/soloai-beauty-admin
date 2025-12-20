@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = 'force-dynamic';
 
 /**
- * Create ServiceItem API
+ * Create Service API
  * POST /api/admin/service-items
  */
 export async function POST(request: NextRequest) {
@@ -13,30 +13,29 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // 基本驗證
-    if (!body.branchId || !body.title || body.price === undefined || body.durationMin === undefined) {
+    if (!body.name || !body.category || body.price === undefined || body.duration === undefined) {
       return NextResponse.json(
         {
           error_code: "INVALID_INPUT",
-          message: "branchId, title, price, and durationMin are required",
+          message: "name, category, price, and duration are required",
         },
         { status: 400 }
       );
     }
 
-    const serviceItem = await prisma.serviceItem.create({
+    const service = await prisma.service.create({
       data: {
-        branchId: body.branchId,
-        title: body.title,
+        name: body.name,
+        category: body.category,
         description: body.description || null,
         price: body.price,
-        durationMin: body.durationMin,
-        imageUrl: body.imageUrl || null,
+        duration: body.duration,
+        bufferTime: body.bufferTime !== undefined ? body.bufferTime : 0,
         isActive: body.isActive !== undefined ? body.isActive : true,
-        sortOrder: body.sortOrder !== undefined ? body.sortOrder : 0,
       },
     });
 
-    return NextResponse.json(serviceItem, { status: 201 });
+    return NextResponse.json(service, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       {
@@ -49,35 +48,31 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * List ServiceItems API
- * GET /api/admin/service-items?branchId=xxx
+ * List Services API
+ * GET /api/admin/service-items
  */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const branchId = searchParams.get("branchId");
+    const category = searchParams.get("category");
+    const isActive = searchParams.get("isActive");
 
-    if (!branchId) {
-      return NextResponse.json(
-        {
-          error_code: "INVALID_INPUT",
-          message: "branchId query parameter is required",
-        },
-        { status: 400 }
-      );
+    const where: any = {};
+    if (category) {
+      where.category = category;
+    }
+    if (isActive !== null) {
+      where.isActive = isActive === "true";
     }
 
-    const serviceItems = await prisma.serviceItem.findMany({
-      where: {
-        branchId: branchId,
-      },
+    const services = await prisma.service.findMany({
+      where,
       orderBy: [
-        { sortOrder: "asc" },
         { createdAt: "desc" },
       ],
     });
 
-    return NextResponse.json(serviceItems, { status: 200 });
+    return NextResponse.json(services, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       {

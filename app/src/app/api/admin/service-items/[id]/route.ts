@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = 'force-dynamic';
 
 /**
- * Get ServiceItem by ID API
+ * Get Service by ID API
  * GET /api/admin/service-items/[id]
  */
 export async function GET(
@@ -15,23 +15,23 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const serviceItem = await prisma.serviceItem.findUnique({
+    const service = await prisma.service.findUnique({
       where: {
         id: id,
       },
     });
 
-    if (!serviceItem) {
+    if (!service) {
       return NextResponse.json(
         {
           error_code: "NOT_FOUND",
-          message: `ServiceItem with id ${id} not found`,
+          message: `Service with id ${id} not found`,
         },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(serviceItem, { status: 200 });
+    return NextResponse.json(service, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       {
@@ -44,7 +44,7 @@ export async function GET(
 }
 
 /**
- * Update ServiceItem API
+ * Update Service API
  * PUT /api/admin/service-items/[id]
  */
 export async function PUT(
@@ -56,7 +56,7 @@ export async function PUT(
     const body = await request.json();
 
     // 檢查是否存在
-    const existing = await prisma.serviceItem.findUnique({
+    const existing = await prisma.service.findUnique({
       where: { id: id },
     });
 
@@ -64,30 +64,29 @@ export async function PUT(
       return NextResponse.json(
         {
           error_code: "NOT_FOUND",
-          message: `ServiceItem with id ${id} not found`,
+          message: `Service with id ${id} not found`,
         },
         { status: 404 }
       );
     }
 
     // 更新資料
-    const serviceItem = await prisma.serviceItem.update({
+    const service = await prisma.service.update({
       where: {
         id: id,
       },
       data: {
-        branchId: body.branchId,
-        title: body.title,
-        description: body.description !== undefined ? body.description : null,
-        price: body.price,
-        durationMin: body.durationMin,
-        imageUrl: body.imageUrl !== undefined ? body.imageUrl : null,
+        name: body.name || existing.name,
+        category: body.category || existing.category,
+        description: body.description !== undefined ? body.description : existing.description,
+        price: body.price !== undefined ? body.price : existing.price,
+        duration: body.duration !== undefined ? body.duration : existing.duration,
+        bufferTime: body.bufferTime !== undefined ? body.bufferTime : existing.bufferTime,
         isActive: body.isActive !== undefined ? body.isActive : existing.isActive,
-        sortOrder: body.sortOrder !== undefined ? body.sortOrder : existing.sortOrder,
       },
     });
 
-    return NextResponse.json(serviceItem, { status: 200 });
+    return NextResponse.json(service, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       {
