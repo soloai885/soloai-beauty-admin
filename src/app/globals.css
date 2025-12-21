@@ -4,27 +4,28 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
   
-  /* 品牌色彩 - Rose-700 (#BE185D) */
-  --primary: 343 88% 42%;
+  /* B2B SaaS 專業品牌色 - 深藍色系 (Indigo-700) */
+  --primary: 239 84% 67%;
   --primary-foreground: 0 0% 100%;
   
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
+  /* 次要色 - 專業紫色系 (Violet-600) */
+  --secondary: 262 83% 58%;
+  --secondary-foreground: 0 0% 100%;
   
   --muted: 210 40% 96.1%;
   --muted-foreground: 215.4 16.3% 46.9%;
   
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --accent: 239 84% 95%;
+  --accent-foreground: 239 84% 40%;
   
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
   
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 343 88% 42%;
+  --ring: 239 84% 67%;
   
   --radius: 0.5rem;
   

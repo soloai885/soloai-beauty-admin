@@ -1,1 +1,1 @@
-Beauty Admin MVP v1
+SoloAI Beauty Admin

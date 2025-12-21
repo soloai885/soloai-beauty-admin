@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+// ⚠️ 待替換：目前使用 Mock Data，需對接資料庫
 import { SERVICES_DATA } from "@/lib/mock-data";
 
 export default function ServicesPage() {
